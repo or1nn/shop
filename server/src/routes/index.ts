@@ -1,0 +1,13 @@
+import { Router } from 'express';
+import userRouter from './userRouter';
+import deviceRouter from './deviceRouter';
+import reviewRouter from './reviewRouter';
+import brandRouter from './brandRouter';
+import typeRouter from './typeRouter';
+const router = Router();
+router.use('/user', userRouter);
+router.use('/device', deviceRouter);
+router.use('/review', reviewRouter);
+router.use('/brand', brandRouter);
+router.use('/type', typeRouter);
+export default router;
