@@ -29,6 +29,26 @@ const userSlice = createSlice({
       state.token = action.payload.token;
       state.isAuth = true;
     },
+    setNewAvatar(state, action: PayloadAction<{avatar: string, token: string}>) {
+      if (state.user) {
+        state.user.avatar = action.payload.avatar;
+        localStorage.removeItem('user');
+        localStorage.setItem(
+          'user',
+          JSON.stringify({
+            user: {
+              id: state.user.id,
+              name: state.user.name,
+              surname: state.user.surname,
+              email: state.user.email,
+              role: state.user.role,
+              avatar: state.user.avatar,
+            },
+            token: action.payload.token,
+          })
+        );
+      }
+    },
     logout(state) {
       localStorage.clear();
       state.user = null;
@@ -38,5 +58,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUser, logout } = userSlice.actions;
+export const { setUser, logout, setNewAvatar } = userSlice.actions;
 export default userSlice.reducer;

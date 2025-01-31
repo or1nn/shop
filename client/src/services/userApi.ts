@@ -1,26 +1,52 @@
 import { api } from './api';
 
-export const userApi = api.injectEndpoints({
+export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation<
-      { token: string },
-      { email: string; password: string }
-    >({
-      query: (userData) => ({
-        url: '/login',
-        method: 'POST',
-        body: userData,
-      }),
+    loginUser: builder.mutation({
+      query: (body: { email: string; password: string }) => {
+        return {
+          url: '/user/login',
+          method: 'POST',
+          body,
+        };
+      },
     }),
-    register: builder.mutation<
-      { email: string; password: string },
-      { email: string; password: string }
-    >({
-      query: (userData) => ({
-        url: '/registration',
-        method: 'POST',
-        body: userData,
-      }),
+    registerUser: builder.mutation({
+      query: (body: {
+        name: string;
+        surname: string;
+        email: string;
+        password: string;
+      }) => {
+        return {
+          url: '/user/registration',
+          method: 'POST',
+          body,
+        };
+      },
+    }),
+    changeUserAvatar: builder.mutation({
+      query: (body: FormData) => {
+        return {
+          url: '/user/newAvatar',
+          method: 'POST',
+          body,
+        };
+      },
+    }),
+    currentUser: builder.query({
+      query: () => {
+        return {
+          url: '/user/current',
+        };
+      },
     }),
   }),
 });
+
+export const {
+  useLoginUserMutation,
+  useRegisterUserMutation,
+  useCurrentUserQuery,
+  useChangeUserAvatarMutation,
+} = authApi;

@@ -15,6 +15,6 @@ router.post(
 );
 router.post('/login', userController.login);
 router.post('/newAvatar', authMiddleware, uploadAvatar.single('avatar'), userController.uploadAvatar);
-router.post('/current', authMiddleware, userController.current);
+router.get('/current', authMiddleware, userController.current);
 
 export default router;

@@ -34,13 +34,24 @@ const cartSlice = createSlice({
         device.count--;
       }
     },
-    addCertanAmountItems (state, action: PayloadAction<{id: number, count: number}>) {
-      const findItem = state.items.find(item => item.id === action.payload.id);
-      if(findItem) {
+    plusItem(state, action: PayloadAction<number>) {
+      const device = state.items.find((item) => item.id === action.payload);
+      if (device) {
+        device.count++;
+      }
+    },
+    addCertanAmountItems(
+      state,
+      action: PayloadAction<{ id: number; count: number }>
+    ) {
+      const findItem = state.items.find(
+        (item) => item.id === action.payload.id
+      );
+      if (findItem) {
         if (action.payload.count > 0) {
-          findItem.count=action.payload.count;
+          findItem.count = action.payload.count;
         } else {
-          findItem.count=1;
+          findItem.count = 1;
         }
       }
       state.totalPrice = calcTotalPrice(state.items);
@@ -69,6 +80,7 @@ export const {
   deleteItem,
   deleteAlItems,
   toggleSelectItem,
-  addCertanAmountItems
+  addCertanAmountItems,
+  plusItem,
 } = cartSlice.actions;
 export default cartSlice.reducer;

@@ -16,6 +16,7 @@ const generateJwt = (
     expiresIn: '24h',
   });
 };
+const KEY = process.env.JWT_SECRET!;
 
 class UserController {
   async register(req: Request, res: Response) {
@@ -118,12 +119,14 @@ class UserController {
   }
   async current(req: Request, res: Response) {
     try {
-      const KEY = process.env.JWT_SECRET!;
+     
       const { role, name, surname, email, id, avatar } = req.user;
       const token = generateJwt(id, name, surname, email, role, avatar, KEY);
-      res.status(200).json({ token, user: { id, name, surname, email, role, avatar } });
+      res
+        .status(200)
+        .json({ token, user: { id, name, surname, email, role, avatar } });
     } catch (error) {
-      res.status(400).json({message: 'ошибка'})
+      res.status(400).json({ message: 'ошибка' });
     }
   }
   async uploadAvatar(req: Request, res: Response) {
@@ -139,7 +142,8 @@ class UserController {
         },
         where: { id: Number(id) },
       });
-      res.status(200).json(user);
+      const token = generateJwt(id, user.name, user.surname, user.email, user.role, user.avatar, KEY);
+      res.status(200).json({ user: { avatar: user.avatar }, token});
     } catch (error) {
       res
         .status(400)

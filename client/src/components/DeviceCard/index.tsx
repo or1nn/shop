@@ -5,6 +5,7 @@ import { BsCartPlus } from 'react-icons/bs';
 import { useAppDispatch } from '../../hooks/redux';
 import { addItem } from '../../store/cart/slice';
 import { BASE_URL } from '../../utils/constants';
+import { Link } from 'react-router-dom';
 
 interface DeviceCardProps {
   id: number;
@@ -21,14 +22,19 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   const [active, setActive] = useState(false);
-  const addFavoriteHandler = () => {
+  const addFavoriteHandler = (e: React.MouseEvent) => {
+    e.preventDefault();
     setActive((state) => !state);
   };
-  const addCartHandler = () => {
+  const addCartHandler = (e: React.MouseEvent) => {
+    e.preventDefault();
     dispatch(addItem({ id, title, price, imageUrl }));
   };
   return (
-    <div className="group grid hover:shadow-xl grid-rows-[200px_1fr_45px] rounded-md outline-[#c5c5c5] py-5 cursor-pointer">
+    <Link
+      to={`/device/${id}`}
+      className="group grid hover:shadow-xl grid-rows-[200px_1fr_45px] rounded-md outline-[#c5c5c5] py-5 cursor-pointer"
+    >
       <div className="flex justify-between w-full px-5">
         <img
           src={`${BASE_URL}/uploads/devices/${imageUrl}`}
@@ -58,6 +64,6 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({
           <BsCartPlus className="w-6 h-6" />
         </button>
       </div>
-    </div>
+    </Link>
   );
 };
