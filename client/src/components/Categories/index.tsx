@@ -1,8 +1,9 @@
+import { Link } from 'react-router-dom';
 import { useGetAllCategoriesQuery } from '../../services/deviceApi';
 import { Skeleton } from './Skeleton';
 
 export const Categories = () => {
-  const { data, isLoading, error } = useGetAllCategoriesQuery('');
+  const { data, isLoading } = useGetAllCategoriesQuery('');
   return (
     <div className="">
       <ul className="">
@@ -13,7 +14,7 @@ export const Categories = () => {
               key={category.id}
               className="mb-2 border-b-1 pt-2 pb-2 border-[#c5c5c5] cursor-pointer"
             >
-              {category.name}
+              <Link to={`/category/${category.id}`}>{category.name}</Link>
             </li>
           ))}
       </ul>

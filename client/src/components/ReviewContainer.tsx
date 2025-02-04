@@ -1,36 +1,66 @@
-import { AiFillStar } from "react-icons/ai";
-import { Review } from "./Review";
+import { toast } from 'react-toastify';
+import { IReview } from '../models/IReview';
+import { useAddReviewMutation } from '../services/reviewApi';
+import { Review } from './Review';
+import { StarRating } from './StarRating';
+import { ChangeEvent, useState } from 'react';
 
-export const ReviewContainer = () => {
+interface ReviewContainerProps {
+  reviews: IReview[];
+  deviceId: number;
+}
+
+export const ReviewContainer: React.FC<ReviewContainerProps> = ({
+  reviews,
+  deviceId,
+}) => {
+  const [rate, setRate] = useState(0);
+  const [content, setContent] = useState('');
+  const [addReview] = useAddReviewMutation();
+  const onAddReview = async () => {
+    try {
+      await addReview({ content, rate, deviceId }).unwrap();
+      setContent('');
+      setRate(0);
+    } catch (error) {
+      toast.error((error as any).data.message);
+    }
+  };
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col mt-20">
       <div className="grid grid-cols-[1000px_200px] grid-rows-[20px_80px] items-center mb-4 gap-y-2">
         <div className="text-2xl font-medium mb-2 col-start-1 col-end-3">
           Отзывы
         </div>
         <div className="flex h-full">
           <textarea
-            name=""
-            id=""
+            name="content"
+            id="content"
+            value={content}
+            onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+              setContent(e.target.value)
+            }
             className="outline-1 outline-gray-500/50 w-full h-20 rounded-l-md px-4 py-2"
             placeholder="Оставьте отзыв..."
           ></textarea>
-          <button className="bg-blue-500 text-white py-4 w-60 rounded-r-xl font-medium mb-2 cursor-pointer h-full">
+          <button
+            onClick={onAddReview}
+            className="bg-blue-500 text-white py-4 w-60 rounded-r-xl font-medium mb-2 cursor-pointer h-full"
+          >
             Оставить отзыв
           </button>
         </div>
         <div className="flex ml-2">
-          <AiFillStar className="w-8 h-8 fill-gray-300" />
-          <AiFillStar className="w-8 h-8 fill-gray-300" />
-          <AiFillStar className="w-8 h-8 fill-gray-300" />
-          <AiFillStar className="w-8 h-8 fill-gray-300" />
-          <AiFillStar className="w-8 h-8 fill-gray-300" />
+          <StarRating
+            defaultState={rate}
+            maxValue={5}
+            onChangeValue={(value) => setRate(value)}
+          />
         </div>
       </div>
-      <Review />
-      <Review />
-      <Review />
-      <Review />
+      {reviews.map((review) => (
+        <Review key={review.id} review={review} />
+      ))}
     </div>
   );
 };

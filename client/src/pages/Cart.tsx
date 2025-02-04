@@ -1,8 +1,8 @@
-
 import { CartEmpty } from '../components/CartEmpty';
 import { CartItem } from '../components/CartItem';
+import { Button } from '../components/ui/Button';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
-import { deleteAlItems } from '../store/cart/slice';
+import { deleteAlItems } from '../store/cartSlice';
 
 const Cart = () => {
   const dispatch = useAppDispatch();
@@ -18,9 +18,7 @@ const Cart = () => {
       <h3 className="font-bold text-3xl mb-5">Корзина</h3>
       <div className="grid grid-cols-[1fr_300px]">
         <div>
-          {items.length === 0 && (
-            <CartEmpty/>
-          )}
+          {items.length === 0 && <CartEmpty />}
           {items.map((item) => (
             <CartItem
               key={item.id}
@@ -40,9 +38,7 @@ const Cart = () => {
               <div className="mb-5">{totalCount} товаров</div>
               <div className="font-medium text-2xl">{totalPrice} ₽</div>
             </div>
-            <button className="bg-blue-500 text-white py-2 w-full rounded-md cursor-pointer">
-              Перейти к оформлению
-            </button>
+            <Button className="w-full" fz='normal'>Перейти к оформлению</Button>
           </div>
           <button className="outline-1 text-gray-700 py-2 w-full rounded-md cursor-pointer mb-4">
             Добавить все в избранное

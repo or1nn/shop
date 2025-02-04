@@ -10,6 +10,6 @@ app.use(express.json());
 app.use(cors())
 app.use(express.urlencoded({ extended: false }));
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')))
-app.use(rootRouter);
+app.use('/api', rootRouter);
 
 app.listen(PORT, () => console.log(`server started on port ${PORT}`));

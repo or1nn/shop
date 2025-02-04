@@ -1,9 +1,9 @@
 import { AiOutlineDelete, AiOutlineHeart } from 'react-icons/ai';
-import { ICartItem } from '../store/cart/types';
 import { useAppDispatch } from '../hooks/redux';
-import { deleteItem, toggleSelectItem } from '../store/cart/slice';
+import { deleteItem, toggleSelectItem } from '../store/cartSlice';
 import { BASE_URL } from '../utils/constants';
 import { Counter } from './Counter';
+import { ICartItem } from '../models/ICartItem';
 
 export const CartItem: React.FC<ICartItem> = ({
   id,

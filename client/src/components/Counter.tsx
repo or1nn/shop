@@ -4,7 +4,7 @@ import {
   deleteItem,
   minusItem,
   plusItem,
-} from '../store/cart/slice';
+} from '../store/cartSlice';
 import { useAppDispatch } from '../hooks/redux';
 
 interface CounterProps {

@@ -5,7 +5,7 @@ class TypeController {
   async create(req: Request, res: Response) {
     try {
       const { name } = req.body;
-      const item = await prisma.type.create({ data: { name } });
+      const item = await prisma.category.create({ data: { name } });
       res.status(200).json(item);
     } catch (error) {
       res.status(200).json({ message: `Ошибка при создании типа ${error}` });
@@ -13,7 +13,7 @@ class TypeController {
   }
   async getAll(req: Request, res: Response) {
     try {
-      const types = await prisma.type.findMany();
+      const types = await prisma.category.findMany();
       res.status(200).json(types);
     } catch (error) {
       res.status(200).json({ message: `Ошибка при получении типов ${error}` });

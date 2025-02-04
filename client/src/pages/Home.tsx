@@ -2,8 +2,14 @@ import { Categories } from '../components/Categories';
 import { DeviceCard } from '../components/DeviceCard';
 import { Skeleton } from '../components/DeviceCard/Skeleton';
 import { useGetAllDevicesQuery } from '../services/deviceApi';
+import { useAppSelector } from '../hooks/redux';
 const Home = () => {
-  const { data, isLoading, error } = useGetAllDevicesQuery('');
+  const searchValue = useAppSelector((state) => state.filter.search);
+  const categoryId = useAppSelector((state) => state.filter.categoryId);
+  const { data, isLoading } = useGetAllDevicesQuery({
+    search: searchValue,
+    categoryId,
+  });
 
   return (
     <>
@@ -16,11 +22,9 @@ const Home = () => {
           {data &&
             data.map((device) => (
               <DeviceCard
+                isFavorite={device.isFavorite || false}
                 key={device.id}
-                id={device.id}
-                title={device.title}
-                price={device.price}
-                imageUrl={device.imageUrl}
+                device={device}
               />
             ))}
         </div>

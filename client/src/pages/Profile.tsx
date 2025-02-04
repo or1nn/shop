@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
-import { logout, setNewAvatar } from '../store/user/slice';
 import { BASE_URL } from '../utils/constants';
-import { useChangeUserAvatarMutation } from '../services/userApi';
-import { ChangeEvent, useEffect, useRef } from 'react';
+import { ChangeEvent, useRef } from 'react';
 import { toast } from 'react-toastify';
+import { logout } from '../store/userSlice';
+import { useUpdateUserMutation } from '../services/userApi';
+import { Button } from '../components/ui/Button';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -14,26 +15,23 @@ const Profile = () => {
     navigate('/');
   };
   const inputFileRef = useRef<HTMLInputElement>(null);
-  const user = useAppSelector((state) => state.user.user);
-  const [changeAvatar, { data, isLoading, isSuccess, error }] =
-    useChangeUserAvatarMutation();
+  const user = useAppSelector((state) => state.user.current);
+  const [updateUser] = useUpdateUserMutation();
   const onChangeAvatarHandler = async (e: ChangeEvent<HTMLInputElement>) => {
     const newAvatar = e.target.files?.[0];
     const formdata = new FormData();
     if (newAvatar) {
       formdata.append('avatar', newAvatar);
     }
-    await changeAvatar(formdata);
+    try {
+      if (user) {
+        await updateUser({ body: formdata, id: user.id }).unwrap();
+        toast.success('Вы успешно изменили профиль');
+      }
+    } catch (error) {
+      toast.error('Не удалось загрузить фото');
+    }
   };
-  useEffect(() => {
-    if (isSuccess) {
-      dispatch(setNewAvatar({ avatar: data.user.avatar, token: data.token }));
-      toast.success('Аватарка обновлена!');
-    }
-    if (error) {
-      toast.error('Не удалось загрузить аватарку');
-    }
-  }, [isLoading]);
   return (
     <div className="container mx-auto ">
       <h2 className="font-bold text-3xl mb-5">Профиль</h2>
@@ -45,20 +43,19 @@ const Profile = () => {
             <div className="mb-5 text-gray-700">
               Статус: {user?.role === 'BUYER' ? 'Покупатель' : 'Администратор'}
             </div>
-            <button
-              className="bg-blue-500 text-white py-2 px-4 rounded-md cursor-pointer"
-              onClick={onClickLogoutHandler}
-            >
+            <Button fz="normal" onClick={onClickLogoutHandler}>
               Выйти
-            </button>
+            </Button>
           </div>
           <div>
             <div className="w-40 h-40 rounded-xl flex flex-col items-center justify-center">
-              <img
-                className="rounded-full w-40 h-40 object-cover mb-2"
-                src={`${BASE_URL}/uploads/avatars/${user?.avatar}`}
-                alt="avatar"
-              />
+              <div className="w-40 h-40 mb-2">
+                <img
+                  className="rounded-full w-40 h-40 object-cover"
+                  src={`${BASE_URL}/uploads/avatars/${user?.avatar}`}
+                  alt="avatar"
+                />
+              </div>
               <input
                 ref={inputFileRef}
                 onChange={onChangeAvatarHandler}
@@ -97,9 +94,7 @@ const Profile = () => {
             value={user?.email}
             className="bg-white px-4 w-70 py-2 block mb-4"
           />
-          <button className="bg-blue-500 text-white py-2 px-4 rounded-md cursor-pointer">
-            Сохранить
-          </button>
+          <Button fz="normal">Сохранить</Button>
         </div>
       </div>
     </div>

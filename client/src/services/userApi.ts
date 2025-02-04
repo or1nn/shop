@@ -1,8 +1,9 @@
+import { IUser } from '../models/IUser';
 import { api } from './api';
 
-export const authApi = api.injectEndpoints({
+export const userApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    loginUser: builder.mutation({
+    login: builder.mutation({
       query: (body: { email: string; password: string }) => {
         return {
           url: '/user/login',
@@ -10,8 +11,9 @@ export const authApi = api.injectEndpoints({
           body,
         };
       },
+      invalidatesTags: ['User'],
     }),
-    registerUser: builder.mutation({
+    register: builder.mutation({
       query: (body: {
         name: string;
         surname: string;
@@ -19,34 +21,38 @@ export const authApi = api.injectEndpoints({
         password: string;
       }) => {
         return {
-          url: '/user/registration',
+          url: '/user/register',
           method: 'POST',
           body,
         };
       },
     }),
-    changeUserAvatar: builder.mutation({
-      query: (body: FormData) => {
+    updateUser: builder.mutation<IUser, { body: FormData; id: number }>({
+      query: ({ body, id }) => {
         return {
-          url: '/user/newAvatar',
-          method: 'POST',
+          url: `/user/${id}`,
+          method: 'PUT',
           body,
         };
       },
+      invalidatesTags: ['User']
     }),
-    currentUser: builder.query({
+    current: builder.query<IUser, void>({
       query: () => {
         return {
           url: '/user/current',
+          method: 'GET',
         };
       },
+      providesTags: () => ['User'],
     }),
   }),
 });
 
 export const {
-  useLoginUserMutation,
-  useRegisterUserMutation,
-  useCurrentUserQuery,
-  useChangeUserAvatarMutation,
-} = authApi;
+  useLoginMutation,
+  useRegisterMutation,
+  useLazyCurrentQuery,
+  useCurrentQuery,
+  useUpdateUserMutation,
+} = userApi;

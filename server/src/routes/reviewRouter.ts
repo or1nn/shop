@@ -4,6 +4,7 @@ import authMiddleware from '../middlewares/authMiddleware';
 
 const router = Router();
 
-router.get('/:id', reviewController.getReviewByDeviceId);
+// router.get('/:id', reviewController.getReviewByDeviceId);
 router.post('/:id', authMiddleware, reviewController.create);
+router.delete('/:id', authMiddleware, reviewController.delete);
 export default router;

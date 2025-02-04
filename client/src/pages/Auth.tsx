@@ -1,18 +1,14 @@
-import { useState, MouseEvent, useEffect } from 'react';
+import { useState, MouseEvent } from 'react';
 import { useInput } from '../hooks/useInput';
-import { FormInput } from '../components/FormInput';
-import { useAppDispatch, useAppSelector } from '../hooks/redux';
+import { FormInput } from '../components/ui/FormInput';
+import { useAppSelector } from '../hooks/redux';
 import { useNavigate } from 'react-router-dom';
-import {
-  useLoginUserMutation,
-  useRegisterUserMutation,
-} from '../services/userApi';
-import { setUser } from '../store/user/slice';
+import { useRegisterMutation, useLoginMutation } from '../services/userApi';
 import { toast } from 'react-toastify';
+import { Button } from '../components/ui/Button';
 
 const Auth = () => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const [isRegister, setIsRegister] = useState(false);
   const isAuth = useAppSelector((state) => state.user.isAuth);
   const name = useInput('', { isEmpty: true, minLength: 3 });
@@ -31,47 +27,28 @@ const Auth = () => {
     e.preventDefault();
     setIsRegister((state) => !state);
   };
-  const [
-    login,
-    { data: dataLogin, isSuccess: isLoginSuccess, error: loginError },
-  ] = useLoginUserMutation();
-  const [
-    register,
-    { data: dataRegister, isSuccess: isRegisterSuccess, error: registerError },
-  ] = useRegisterUserMutation();
+  const [login] = useLoginMutation();
+  const [register] = useRegisterMutation();
   const onSubmitFormHandler = async (e: MouseEvent) => {
     e.preventDefault();
-    if (isRegister) {
-      await register({
-        email: email.value,
-        password: password.value,
-        name: name.value,
-        surname: surname.value,
-      });
-    } else {
-      await login({ email: email.value, password: password.value });
+    try {
+      if (isRegister) {
+        await register({
+          email: email.value,
+          password: password.value,
+          name: name.value,
+          surname: surname.value,
+        }).unwrap();
+        setIsRegister(false);
+        toast.success('Вы успешно зарегистрировались');
+      } else {
+        await login({ email: email.value, password: password.value }).unwrap();
+        toast.success('Вы успешно вошли');
+      }
+    } catch (error) {
+      toast.error((error as any).data.message);
     }
   };
-  useEffect(() => {
-    if (isLoginSuccess) {
-      dispatch(setUser(dataLogin));
-      toast.success('Вы успешно вошли!');
-      navigate('/');
-    }
-    if (isRegisterSuccess) {
-      dispatch(setUser(dataRegister));
-      toast.success('Вы успешно зарегистрировались!');
-      navigate('/');
-    }
-  }, [isLoginSuccess, isRegisterSuccess]);
-  useEffect(() => {
-    if (loginError) {
-      toast.error((loginError as any).data.message);
-    }
-    if (registerError) {
-      toast.error((registerError as any).data.message);
-    }
-  }, [loginError, registerError]);
 
   return (
     <div className="container mx-auto py-20">
@@ -128,7 +105,8 @@ const Auth = () => {
           />
         )}
 
-        <button
+        <Button
+        fz='normal'
           onClick={onSubmitFormHandler}
           disabled={
             isRegister
@@ -142,7 +120,7 @@ const Auth = () => {
           className="bg-blue-500 w-100 py-2 rounded-xl mb-4 text-white cursor-pointer disabled:bg-gray-500 disabled:cursor-default"
         >
           {isRegister ? 'Зарегистрироваться' : 'Войти'}
-        </button>
+        </Button>
         <label>
           {isRegister ? 'Есть аккаунт? ' : 'Нет акккаунта? '}
           <button
