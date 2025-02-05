@@ -42,13 +42,9 @@ export const Sort: React.FC<SortProps> = ({
           </div>
         ))}
       </div>
-      <Button
-        onClick={toggleOrder}
-        variant="subtle"
-        className=" rounded-xl"
-      >
+      <Button onClick={toggleOrder} variant="subtle" className=" rounded-xl">
         <AiOutlineSwap className="mr-2" />
-        {order === 'desc' ? 'По убыванию': 'По возрастанию'}
+        {order === 'desc' ? 'По убыванию' : 'По возрастанию'}
       </Button>
     </div>
   );

@@ -1,33 +1,42 @@
 import { IDevice } from '../models/IDevice';
 import { ICategory } from '../models/ICategory';
 import { api } from './api';
+import { IBrand } from '../models/IBrand';
 
 export const deviceApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getAllDevices: builder.query<
-      IDevice[],
-      { search: string; categoryId?: number | null }
+      { devices: IDevice[]; totalPages: number; currentPage: number },
+      {
+        search: string;
+        categoryId?: number;
+        sortBy?: number;
+        order?: string;
+        brandId?: number;
+        page: number;
+      }
     >({
-      query: ({ search, categoryId }) =>
-        categoryId
-          ? `/device?search=${search}&categoryId=${categoryId}&sortBy=0`
-          : `/device?search=${search}&sortBy=0`,
+      query: ({ search, categoryId, sortBy, order, brandId, page }) =>
+        `/device?search=${search}${
+          categoryId ? `&categoryId=${categoryId}` : ''
+        }${brandId ? `&brandId=${brandId}` : ''}&sortBy=${
+          sortBy ? sortBy : 0
+        }&order=${order ? order : 'asc'}&page=${page}`,
       providesTags: () => ['Device'],
     }),
-    getAllDevicesByCategory: builder.query<
-      IDevice[],
-      { search: string; categoryId: number; sortBy: number; order: string }
-    >({
-      query: ({ search, categoryId, sortBy, order }) =>
-        `/device?search=${search}&categoryId=${categoryId}&sortBy=${sortBy}&order=${order}`,
+    getHitDevices: builder.query<IDevice[], void>({
+      query: () => '/device/hits',
       providesTags: () => ['Device'],
     }),
     getDeviceById: builder.query<IDevice, string>({
-      query: (id) => `/device/${id}?search=`,
-      providesTags: () => ['Review']
+      query: (id) => `/device/${id}`,
+      providesTags: () => ['Review'],
     }),
-    getAllCategories: builder.query<ICategory[], string>({
+    getAllCategories: builder.query<ICategory[], void>({
       query: () => '/category',
+    }),
+    getAllBrands: builder.query<IBrand[], void>({
+      query: () => '/brand',
     }),
   }),
 });
@@ -36,6 +45,6 @@ export const {
   useGetAllDevicesQuery,
   useGetAllCategoriesQuery,
   useGetDeviceByIdQuery,
-  useLazyGetAllDevicesQuery,
-  useGetAllDevicesByCategoryQuery,
+  useGetHitDevicesQuery,
+  useGetAllBrandsQuery,
 } = deviceApi;

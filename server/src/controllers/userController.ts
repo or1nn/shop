@@ -1,32 +1,29 @@
 import { prisma } from '../utils/prismaClient';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import ApiError from '../error/ApiError';
 
 const generateJwt = (userId: number, KEY: string) => {
   return jwt.sign({ userId }, KEY, {
     expiresIn: '24h',
   });
 };
-const KEY = process.env.JWT_SECRET!;
 
 class UserController {
-  async register(req: Request, res: Response) {
+  async register(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, name, surname, password } = req.body;
       if (!email || !name || !surname || !password) {
-        res.status(400).json({
-          message: `Введите все поля! ${surname}`,
-        });
-        return;
+        next(ApiError.badRequest('Все поля обязательны'));
       }
       const candidate = await prisma.user.findFirst({ where: { email } });
       if (candidate) {
-        res.status(400).json({
-          message:
-            'Пользователь с таким E-Mail`ом или именем уже зарегистрирован',
-        });
-        return;
+        return next(
+          ApiError.badRequest(
+            'Пользователь с таким E-Mail`ом или именем уже зарегистрирован'
+          )
+        );
       }
       const salt = await bcrypt.genSalt(5);
       const hashPassword = await bcrypt.hash(password, salt);
@@ -47,17 +44,14 @@ class UserController {
       });
       res.status(200).json(user);
     } catch (error) {
-      res
-        .status(400)
-        .json({ message: `Не удалось зарегистироваться: ${error}` });
+      next(ApiError.internal());
     }
   }
-  async login(req: Request, res: Response) {
+  async login(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = req.body;
       if (!email || !password) {
-        res.status(400).json({ message: 'Введите все поля' });
-        return;
+        return next(ApiError.badRequest('Все поля обязательны'));
       }
       const user = await prisma.user.findFirst({
         where: { email },
@@ -72,29 +66,27 @@ class UserController {
           token,
         });
       } else {
-        res.status(400).json({ message: 'Неверно введен логин и пароль' });
-        return;
+        return next(ApiError.badRequest('Неверно введен логин и пароль'));
       }
     } catch (error) {
-      res.status(400).json({ message: `Произошла ошибка при авторизации` });
+      next(ApiError.internal());
     }
   }
-  async current(req: Request, res: Response) {
+  async current(req: Request, res: Response, next: NextFunction) {
     try {
       const user = await prisma.user.findUnique({
         where: { id: req.user.userId },
-        include: { favorites: {include: {device: true}}},
+        include: { favorites: { include: { device: true } } },
       });
       if (!user) {
-        res.status(400).json({ message: 'Пользователь не найден' });
-        return;
+        return next(ApiError.forbidden('Пользователь не найден'));
       }
       res.status(200).json(user);
     } catch (error) {
-      res.status(400).json({ message: 'ошибка' });
+      next(ApiError.internal());
     }
   }
-  async updateUser(req: Request, res: Response) {
+  async updateUser(req: Request, res: Response, next: NextFunction) {
     const userId = req.user.userId;
     const { email, name, surname } = req.body;
     const { id } = req.params;
@@ -104,15 +96,13 @@ class UserController {
     }
     console.log(filePath);
     if (userId !== Number(id)) {
-      res.status(400).json({ message: 'Нет доступа' });
-      return;
+      return next(ApiError.forbidden('Нет доступа'));
     }
     try {
       if (email) {
         const existingUser = await prisma.user.findFirst({ where: { email } });
         if (existingUser && existingUser.id !== userId) {
-          res.status(400).json({ message: 'Почта уже занята' });
-          return;
+          return next(ApiError.badRequest('Почта уже занята'));
         }
       }
       const user = await prisma.user.update({
@@ -126,86 +116,9 @@ class UserController {
       });
       res.json(user);
     } catch (error) {
-      res.json({ message: `Произошла ошибка на стороне сервера ${error}` });
+      next(ApiError.internal());
     }
   }
-  // async uploadAvatar(req: Request, res: Response) {
-  //   try {
-  //     const avatar = req.file?.filename;
-  //     const { id } = req.user;
-  //     if (!avatar) {
-  //       throw new Error('загрузите аватарку');
-  //     }
-  //     const user = await prisma.user.update({
-  //       data: {
-  //         avatar,
-  //       },
-  //       where: { id: Number(id) },
-  //       include: { favorites: true },
-  //     });
-  //     const token = generateJwt(
-  //       id,
-  //       user.name,
-  //       user.surname,
-  //       user.email,
-  //       user.role,
-  //       user.avatar,
-  //       user.favorites,
-  //       KEY
-  //     );
-  //     res.status(200).json({ user: { avatar: user.avatar }, token });
-  //   } catch (error) {
-  //     res
-  //       .status(400)
-  //       .json({ message: `Произошла ошибка при загрузке фото: ${error}` });
-  //   }
-  // }
-  // async toggleFavorite(req: Request, res: Response) {
-  //   try {
-  //     const { id: deviceId } = req.body;
-  //     const userId = req.user.id;
-  //     const user = await prisma.user.findUnique({
-  //       where: { id: Number(userId) },
-  //       include: { favorites: true },
-  //     });
-  //     if (!user) {
-  //       throw Error('не найден пользователь');
-  //     }
-  //     const isExists = user.favorites.some(
-  //       (device) => device.id === Number(deviceId)
-  //     );
-  //     const newUser = await prisma.user.update({
-  //       where: { id: Number(userId) },
-  //       include: {
-  //         favorites: true,
-  //       },
-  //       data: {
-  //         favorites: {
-  //           set: isExists
-  //             ? user.favorites.filter(
-  //                 (device) => device.id !== Number(deviceId)
-  //               )
-  //             : [...user.favorites, { id: deviceId }],
-  //         },
-  //       },
-  //     });
-  //     const token = generateJwt(
-  //       newUser.id,
-  //       newUser.name,
-  //       newUser.surname,
-  //       newUser.email,
-  //       newUser.role,
-  //       newUser.avatar,
-  //       newUser.favorites,
-  //       KEY
-  //     );
-  //     res.status(200).json({ favorites: newUser.favorites, token });
-  //   } catch (error) {
-  //     res
-  //       .status(400)
-  //       .json({ message: 'Ошибка при добавлении/удалении в избранное' });
-  //   }
-  // }
 }
 
 export default new UserController();

@@ -2,7 +2,7 @@ import { toast } from 'react-toastify';
 import { IReview } from '../models/IReview';
 import { useAddReviewMutation } from '../services/reviewApi';
 import { Review } from './Review';
-import { StarRating } from './StarRating';
+import { StarRating } from './ui/StarRating';
 import { ChangeEvent, useState } from 'react';
 
 interface ReviewContainerProps {

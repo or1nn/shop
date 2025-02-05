@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { logout } from '../store/userSlice';
 import { useUpdateUserMutation } from '../services/userApi';
 import { Button } from '../components/ui/Button';
+import { ProfileSettings } from '../components/ProfileSettings';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -33,8 +34,8 @@ const Profile = () => {
     }
   };
   return (
-    <div className="container mx-auto ">
-      <h2 className="font-bold text-3xl mb-5">Профиль</h2>
+    <div className="container mx-auto pt-2">
+      <h2 className="font-medium text-2xl mb-4">Профиль</h2>
       <div className="grid grid-cols-2 gap-5">
         <div className="bg-gray-200 p-10 grid grid-cols-[1fr_160px] rounded-md">
           <div>
@@ -71,31 +72,18 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        <div className="bg-gray-200 p-10 rounded-md">
+        <div className="bg-gray-200 p-10 rounded-md col-start-2 row-start-1 row-end-3 ">
           <div className="text-2xl ">Заказы</div>
+          <div className="text-center text-xl pt-50">
+            Вы еще не совершали покупок
+          </div>
         </div>
-        <div className="bg-gray-200 p-10 rounded-md">
-          <div className="text-2xl mb-10">Настройки профиля</div>
-          <input
-            type="text"
-            placeholder="Имя"
-            className="bg-white px-4 py-2 w-70 block mb-4"
-            value={user?.name}
-          />
-          <input
-            type="text"
-            placeholder="Фамилия"
-            className="bg-white px-4 w-70 py-2 block mb-4"
-            value={user?.surname}
-          />
-          <input
-            type="text"
-            placeholder="E-mail"
-            value={user?.email}
-            className="bg-white px-4 w-70 py-2 block mb-4"
-          />
-          <Button fz="normal">Сохранить</Button>
-        </div>
+        <ProfileSettings
+          defaultName={user!.name}
+          defaultSurname={user!.surname}
+          defaultEmail={user!.email}
+          id={user!.id}
+        />
       </div>
     </div>
   );

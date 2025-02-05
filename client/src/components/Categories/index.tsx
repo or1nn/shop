@@ -3,18 +3,20 @@ import { useGetAllCategoriesQuery } from '../../services/deviceApi';
 import { Skeleton } from './Skeleton';
 
 export const Categories = () => {
-  const { data, isLoading } = useGetAllCategoriesQuery('');
+  const { data, isLoading } = useGetAllCategoriesQuery();
   return (
-    <div className="">
+    <div className="py-5">
       <ul className="">
         {isLoading && [...new Array(6)].map((_, i) => <Skeleton key={i} />)}
         {data &&
           data.map((category) => (
-            <li
-              key={category.id}
-              className="mb-2 border-b-1 pt-2 pb-2 border-[#c5c5c5] cursor-pointer"
-            >
-              <Link to={`/category/${category.id}`}>{category.name}</Link>
+            <li key={category.id}>
+              <Link
+                to={`/category/${category.id}`}
+                className="mb-2 pb-2 border-[#c5c5c5] cursor-pointer hover:text-blue-500 block"
+              >
+                {category.name}
+              </Link>
             </li>
           ))}
       </ul>

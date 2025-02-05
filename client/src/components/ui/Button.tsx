@@ -25,8 +25,9 @@ export const Button: React.FC<ButtonProps> = ({
     <button
       {...props}
       onClick={onClick}
+      disabled={disabled}
       className={clsx(
-        'py-2 px-4 rounded-md cursor-pointer flex items-center justify-center',
+        'py-2 px-4 rounded-md cursor-pointer flex items-center justify-center disabled:bg-gray-500 disabled:cursor-default',
         variant === 'primary' && 'bg-blue-500 text-white',
         variant === 'outline' &&
           (isActive

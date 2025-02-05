@@ -3,7 +3,7 @@ import { IReview } from '../models/IReview';
 import { useDeleteReviewMutation } from '../services/reviewApi';
 import { BASE_URL } from '../utils/constants';
 import { formatDate } from '../utils/formatDate';
-import { StarRating } from './StarRating';
+import { StarRating } from './ui/StarRating';
 import { AiOutlineDelete } from 'react-icons/ai';
 
 interface ReviewProps {
@@ -23,7 +23,6 @@ export const Review: React.FC<ReviewProps> = ({ review }) => {
           <AiOutlineDelete className="absolute top-4 right-2 w-7 h-7 fill-gray-500 hover:fill-red-500" />
         </button>
       )}
-
       <div className="grid grid-cols-[80px_200px] items-center grid-rows-2 mb-2">
         <div className="w-15 row-start-1 row-end-3">
           <img

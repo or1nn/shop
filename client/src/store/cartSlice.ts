@@ -28,17 +28,27 @@ const cartSlice = createSlice({
       }
       state.totalPrice = calcTotalPrice(state.items);
     },
+    toggleFavorite(state, action: PayloadAction<number>) {
+      state.items = state.items.map((item) => {
+        if (action.payload == item.id) {
+          return { ...item, isFavorite: !item.isFavorite };
+        }
+        return item;
+      });
+    },
     minusItem(state, action: PayloadAction<number>) {
       const device = state.items.find((item) => item.id === action.payload);
       if (device) {
         device.count--;
       }
+      state.totalPrice = calcTotalPrice(state.items);
     },
     plusItem(state, action: PayloadAction<number>) {
       const device = state.items.find((item) => item.id === action.payload);
       if (device) {
         device.count++;
       }
+      state.totalPrice = calcTotalPrice(state.items);
     },
     addCertanAmountItems(
       state,
@@ -82,5 +92,6 @@ export const {
   toggleSelectItem,
   addCertanAmountItems,
   plusItem,
+  toggleFavorite
 } = cartSlice.actions;
 export default cartSlice.reducer;

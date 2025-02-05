@@ -8,7 +8,7 @@ import { IDevice } from '../models/IDevice';
 
 interface ButtonWithCounter {
   type?: string;
-  device: IDevice
+  device: IDevice;
 }
 
 export const ButtonWithCounter: React.FC<ButtonWithCounter> = ({

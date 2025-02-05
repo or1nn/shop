@@ -18,6 +18,8 @@ lerna-debug.log*
 /server/build
 /server/src/private.ts
 /server/.env
+/server/uploads/avatars/**
+/server/uploads/devices/**
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -1,9 +1,9 @@
-import { Router } from "express";
-import typeController from "../controllers/categoryController";
+import { Router } from 'express';
+import categoryController from '../controllers/categoryController';
 
 const router = Router();
 
-router.post('/create', typeController.create);
-router.get('/', typeController.getAll);
+router.post('/create', categoryController.create);
+router.get('/', categoryController.getAll);
 
 export default router;

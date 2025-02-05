@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { StarRatingContext } from './StarRating';
+import { StarRatingContext } from '.';
 import { Star } from './Star';
 
 export const StarList = () => {

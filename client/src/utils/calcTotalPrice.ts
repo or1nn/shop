@@ -1,4 +1,4 @@
-import { ICartItem } from '../store/cart/types';
+import { ICartItem } from '../models/ICartItem';
 
 export const calcTotalPrice = (items: ICartItem[]) => {
   return items.reduce((acc, item) => {

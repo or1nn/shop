@@ -1,5 +1,5 @@
 import { AiOutlineSearch } from 'react-icons/ai';
-import { useAppDispatch, useAppSelector } from '../hooks/redux';
+import { useAppDispatch } from '../hooks/redux';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { setSearch } from '../store/filterSlice';
 import { AiOutlineClose } from 'react-icons/ai';
@@ -22,7 +22,7 @@ export const Search = () => {
   return (
     <div className="">
       <form
-      onSubmit={onSubmitHandler}
+        onSubmit={onSubmitHandler}
         className="flex outline-1 rounded-md outline-[#c5c5c5] w-100 justify-between relative"
       >
         <input
@@ -41,7 +41,10 @@ export const Search = () => {
             <AiOutlineClose className="w-5 h-5 fill-gray-500" />
           </button>
         )}
-        <button type="submit" className="bg-blue-500 p-2 rounded-r-md cursor-pointer">
+        <button
+          type="submit"
+          className="bg-blue-500 p-2 rounded-r-md cursor-pointer"
+        >
           <span>
             <AiOutlineSearch fill="white" className="h-8 w-8" />
           </span>

@@ -1,4 +1,4 @@
-import { BsCartPlus } from 'react-icons/bs';
+import { BsBookmarkFill, BsCartPlus } from 'react-icons/bs';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { addItem } from '../../store/cartSlice';
 import { BASE_URL } from '../../utils/constants';
@@ -10,7 +10,8 @@ import {
 import { toast } from 'react-toastify';
 import { IDevice } from '../../models/IDevice';
 import { formatNumber } from '../../utils/formatNumber';
-import { BiBookmark } from 'react-icons/bi';
+import { BsBookmark } from 'react-icons/bs';
+import { formatTitle } from '../../utils/formatTitle';
 
 interface DeviceCardProps {
   device: IDevice;
@@ -22,6 +23,7 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({
   isFavorite,
 }) => {
   const { id, imageUrl, title, price } = device;
+
   const dispatch = useAppDispatch();
   const [addFavorite] = useAddFavoriteMutation();
   const [deleteFavorite] = useDeleteFavoriteMutation();
@@ -41,30 +43,34 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({
   };
   const addCartHandler = (e: React.MouseEvent) => {
     e.preventDefault();
-    dispatch(addItem(device));
+    dispatch(addItem({ ...device, isFavorite }));
   };
   return (
     <Link
       to={`/device/${id}`}
-      className="group grid hover:shadow-xl grid-rows-[200px_1fr_45px] rounded-xl outline-[#c5c5c5] py-5 cursor-pointer"
+      className="group grid h-91 hover:shadow-xl grid-rows-[200px_1fr_45px] rounded-xl outline-[#c5c5c5] py-5 cursor-pointer relative"
     >
       <div className="flex justify-between w-full px-5">
-        <img
-          src={`${BASE_URL}/uploads/devices/${imageUrl}`}
-          className="h-50 object-cover"
-          alt="device"
-        />
-
-        <button className="h-7 cursor-pointer" onClick={addFavoriteHandler}>
+        <div className="overflow-hidden pr-7">
+          <img
+            src={`${BASE_URL}/uploads/devices/${imageUrl}`}
+            className="object-contain h-50 w-full"
+            alt="device"
+          />
+        </div>
+        <button
+          className="h-7 absolute right-4 cursor-pointer"
+          onClick={addFavoriteHandler}
+        >
           {isAuth && isFavorite ? (
-            <BiBookmark className="h-7 w-7 fill-blue-500" />
+            <BsBookmarkFill className="h-6 w-6 fill-blue-500" />
           ) : (
-            <BiBookmark className="h-7 w-7 fill-gray-500" />
+            <BsBookmark className="h-6 w-6 fill-gray-500 hover:fill-blue-500" />
           )}
         </button>
       </div>
       <div className="font-medium text-gray-500 px-4 group-hover:text-blue-500 mt-2">
-        {title}
+        {formatTitle(title)}
       </div>
       <div className="flex justify-between items-center w-full px-4">
         <div className="font-medium text-2xl ">

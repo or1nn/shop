@@ -34,7 +34,7 @@ export const StarRating: React.FC<StarRatingProps> = ({
   const [hover, setHover] = useState(null);
   useEffect(() => {
     setRating(defaultState);
-  }, [defaultState])
+  }, [defaultState]);
   const setRatingFn = (value: any) => {
     if (readOnly) return;
     setRating(value);

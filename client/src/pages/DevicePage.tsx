@@ -14,6 +14,7 @@ import { Button } from '../components/ui/Button';
 import { ButtonWithCounter } from '../components/ButtonWithCounter';
 import { avgRating } from '../utils/avgRating';
 import { formatNumber } from '../utils/formatNumber';
+import { DeviceInfo } from '../components/DeviceInfo';
 
 const DevicePage = () => {
   const { id } = useParams();
@@ -55,20 +56,7 @@ const DevicePage = () => {
           <div className="ml-8">
             <img src={`${BASE_URL}/uploads/devices/${imageUrl}`} alt="device" />
           </div>
-          <ul>
-            <li>
-              <span className="text-gray-500">Экран:</span> AMOLED Super AMOLED
-              FHD+, 6.6" (2340x1080) Процессор: Samsung
-            </li>
-            <li>
-              <span className="text-gray-500">Exynos 1480 Память:</span>{' '}
-              оперативная 8 ГБ, встроенная 256 ГБ
-            </li>
-            <li>
-              <span className="text-gray-500">Аккумулятор:</span> Li-Pol, 5000
-              мAч, несъемный Поддержка сетей: 2G/3G/4G (LTE)/5G{' '}
-            </li>
-          </ul>
+          <DeviceInfo info={data!.info} />
           <div className="mr-5">
             <div className="text-4xl font-medium mb-2">
               {formatNumber(price)}{' '}
