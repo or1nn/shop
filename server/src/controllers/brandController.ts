@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { prisma } from '../utils/prismaClient';
 import ApiError from '../error/ApiError';
+import BrandService from '../services/BrandService';
 
 class BrandController {
   async create(req: Request, res: Response, next: NextFunction) {
@@ -9,7 +9,7 @@ class BrandController {
       return next(ApiError.forbidden('Введите название бренда'));
     }
     try {
-      const brand = await prisma.brand.create({ data: { name } });
+      const brand = await BrandService.create(name);
       res.status(200).json(brand);
     } catch (error) {
       next(ApiError.internal());
@@ -17,7 +17,7 @@ class BrandController {
   }
   async getAll(_: Request, res: Response, next: NextFunction) {
     try {
-      const items = await prisma.brand.findMany();
+      const items = await BrandService.getAll();
       res.status(200).json(items);
     } catch (error) {
       next(ApiError.internal());

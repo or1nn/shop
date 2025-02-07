@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import reviewController from '../controllers/reviewController';
+import ReviewController from '../controllers/ReviewController';
 import authMiddleware from '../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/:id', authMiddleware, reviewController.create);
-router.delete('/:id', authMiddleware, reviewController.delete);
+router.post('/:id', authMiddleware, ReviewController.create);
+router.delete('/:id', authMiddleware, ReviewController.delete);
 export default router;

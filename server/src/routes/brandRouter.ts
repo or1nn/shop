@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import brandController from '../controllers/brandController';
+import BrandController from '../controllers/BrandController';
 
 const router = Router();
 
-router.post('/create', brandController.create);
-router.get('/', brandController.getAll);
+router.post('/create', BrandController.create);
+router.get('/', BrandController.getAll);
 
 export default router;

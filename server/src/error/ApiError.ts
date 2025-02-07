@@ -9,8 +9,8 @@ class ApiError extends Error {
     return new ApiError(404, message);
   }
 
-  static internal() {
-    return new ApiError(500, 'Произошла ошибка на стороне сервера');
+  static internal(message?: string) {
+    return new ApiError(500, message || 'Произошла ошибка на стороне сервера');
   }
   static forbidden(message: string) {
     return new ApiError(403, message);

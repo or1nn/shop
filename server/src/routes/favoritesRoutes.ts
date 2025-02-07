@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import favoritesController from '../controllers/favoritesController';
+import FavoritesController from '../controllers/FavoritesController';
 import authMiddleware from '../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/', authMiddleware, favoritesController.addFavorite);
-router.delete('/:id', authMiddleware, favoritesController.deleteFavorite);
+router.post('/', authMiddleware, FavoritesController.addFavorite);
+router.delete('/:id', authMiddleware, FavoritesController.deleteFavorite);
 
 export default router;

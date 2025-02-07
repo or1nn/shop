@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import userController from '../controllers/userController';
+import UserController from '../controllers/UserController';
 import { validateRegistration } from '../middlewares/validation';
 import errorValidationHandler from '../middlewares/errorValidationHandler';
 import authMiddleware from '../middlewares/authMiddleware';
@@ -11,15 +11,15 @@ router.post(
   '/register',
   validateRegistration,
   errorValidationHandler,
-  userController.register
+  UserController.register
 );
-router.post('/login', userController.login);
-router.get('/current', authMiddleware, userController.current);
+router.post('/login', UserController.login);
+router.get('/current', authMiddleware, UserController.current);
 router.put(
   '/:id',
   authMiddleware,
   uploadAvatar.single('avatar'),
-  userController.updateUser
+  UserController.updateUser
 );
 
 export default router;

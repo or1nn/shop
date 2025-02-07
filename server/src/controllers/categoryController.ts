@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { prisma } from '../utils/prismaClient';
 import ApiError from '../error/ApiError';
+import CategoryService from '../services/CategoryService';
 
 class CategoryController {
   async create(req: Request, res: Response, next: NextFunction) {
@@ -9,7 +9,7 @@ class CategoryController {
       if (!name) {
         return next(ApiError.forbidden('Введите название категории'));
       }
-      const item = await prisma.category.create({ data: { name } });
+      const item = await CategoryService.create(name);
       res.status(200).json(item);
     } catch (error) {
       next(ApiError.internal());
@@ -17,8 +17,8 @@ class CategoryController {
   }
   async getAll(_: Request, res: Response, next: NextFunction) {
     try {
-      const types = await prisma.category.findMany();
-      res.status(200).json(types);
+      const categories = await CategoryService.getAll();
+      res.status(200).json(categories);
     } catch (error) {
       next(ApiError.internal());
     }

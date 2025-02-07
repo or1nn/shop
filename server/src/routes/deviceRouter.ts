@@ -1,16 +1,16 @@
 import { Router } from 'express';
-import deviceController from '../controllers/deviceController';
+import DeviceController from '../controllers/DeviceController';
 import { uploadDeviceImage } from '../middlewares/uploadFileMiddleware';
 
 const router = Router();
 
-router.get('/', deviceController.getAll);
-router.get('/hits', deviceController.getHits);
+router.get('/', DeviceController.getAll);
+router.get('/hits', DeviceController.getHits);
 router.post(
   '/',
   uploadDeviceImage.single('deviceImage'),
-  deviceController.create
+  DeviceController.create
 );
-router.get('/:id', deviceController.getById);
+router.get('/:id', DeviceController.getById);
 
 export default router;
