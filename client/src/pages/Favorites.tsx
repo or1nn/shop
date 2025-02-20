@@ -1,5 +1,5 @@
-import { DeviceCard } from '../components/DeviceCard';
-import { useAppSelector } from '../hooks/redux';
+import { DeviceCard } from '@components/shared';
+import { useAppSelector } from '@/hooks';
 
 const Favorites = () => {
   const favorites = useAppSelector((state) => state.user.favorites);

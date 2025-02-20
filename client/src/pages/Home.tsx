@@ -1,17 +1,16 @@
-import { Categories } from '../components/Categories';
-import { DeviceCard } from '../components/DeviceCard';
-import { Skeleton } from '../components/DeviceCard/Skeleton';
+import { useState } from 'react';
+import {
+  Categories,
+  SearchEmpty,
+  Pagination,
+} from '@/components';
 import {
   useGetAllDevicesQuery,
   useGetHitDevicesQuery,
-} from '../services/deviceApi';
-import { useAppSelector } from '../hooks/redux';
-import { SearchEmpty } from '../components/SearchEmpty';
-import Slider from 'react-slick';
-import { NextArrow } from '../components/ui/Arrows/NextArrow';
-import { PrevArrow } from '../components/ui/Arrows/PrevArrow';
-import { useState } from 'react';
-import { Pagination } from '../components/Pagination';
+} from '@/services/device-api';
+import { useAppSelector } from '@/hooks/redux';
+import { Slider } from '@components/shared/slider';
+import { DevicesList } from '@components/shared/devices-list';
 
 const Home = () => {
   const searchValue = useAppSelector((state) => state.filter.search);
@@ -34,18 +33,7 @@ const Home = () => {
           {data && data.devices.length === 0 && (
             <SearchEmpty searchValue={searchValue} />
           )}
-          <div className="grid grid-cols-5 gap-3 grid-rows-[365px_365px]">
-            {isLoading &&
-              [...new Array(10)].map((_, i) => <Skeleton key={i} />)}
-            {data &&
-              data.devices.map((device) => (
-                <DeviceCard
-                  isFavorite={device.isFavorite || false}
-                  key={device.id}
-                  device={device}
-                />
-              ))}
-          </div>
+          <DevicesList items={data!} isLoading={isLoading} />
           <div className="col-start-1 col-end-3 pb-10">
             {data && (
               <Pagination
@@ -54,22 +42,7 @@ const Home = () => {
                 currentPage={page}
               />
             )}
-            <h2 className="text-2xl font-medium mb-4">Хиты продаж</h2>
-            <Slider
-              slidesToShow={5}
-              infinite={true}
-              nextArrow={<NextArrow />}
-              prevArrow={<PrevArrow />}
-            >
-              {hits &&
-                hits!.map((item) => (
-                  <DeviceCard
-                    isFavorite={item.isFavorite || false}
-                    key={item.id}
-                    device={item}
-                  />
-                ))}
-            </Slider>
+            <Slider title="Хиты продаж" items={hits || []} />
           </div>
         </div>
       </div>

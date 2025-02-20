@@ -1,11 +1,9 @@
 import { useState, MouseEvent } from 'react';
-import { useInput } from '../hooks/useInput';
-import { FormInput } from '../components/ui/FormInput';
-import { useAppSelector } from '../hooks/redux';
 import { useNavigate } from 'react-router-dom';
-import { useRegisterMutation, useLoginMutation } from '../services/userApi';
 import { toast } from 'react-toastify';
-import { Button } from '../components/ui/Button';
+import { useRegisterMutation, useLoginMutation } from '@/services/user-api';
+import { FormInput, Button } from '@components/ui';
+import { useInput, useAppSelector } from '../hooks';
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -106,7 +104,7 @@ const Auth = () => {
         )}
 
         <Button
-        fz='normal'
+          fz="normal"
           onClick={onSubmitFormHandler}
           disabled={
             isRegister

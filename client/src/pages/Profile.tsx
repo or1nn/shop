@@ -1,12 +1,11 @@
-import { useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../hooks/redux';
-import { BASE_URL } from '../utils/constants';
 import { ChangeEvent, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { logout } from '../store/userSlice';
-import { useUpdateUserMutation } from '../services/userApi';
-import { Button } from '../components/ui/Button';
-import { ProfileSettings } from '../components/ProfileSettings';
+import { useAppDispatch, useAppSelector } from '@/hooks';
+import { logout } from '@/store/user-slice';
+import { useUpdateUserMutation } from '../services/user-api';
+import { BASE_URL } from '@/services/api';
+import { Button, ProfileSettings } from '@/components';
 
 const Profile = () => {
   const navigate = useNavigate();

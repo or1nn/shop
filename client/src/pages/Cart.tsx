@@ -1,9 +1,8 @@
-import { CartEmpty } from '../components/CartEmpty';
-import { CartItem } from '../components/CartItem';
-import { Button } from '../components/ui/Button';
-import { useAppDispatch, useAppSelector } from '../hooks/redux';
-import { deleteAlItems } from '../store/cartSlice';
-import { formatNumber } from '../utils/formatNumber';
+import { CartItem, CartEmpty } from '@components/shared';
+import { Button } from '@components/ui';
+import { useAppDispatch, useAppSelector } from '@/hooks';
+import { deleteAlItems } from '../store/cart-slice';
+import { getFormatNumber } from '@/utils';
 
 const Cart = () => {
   const dispatch = useAppDispatch();
@@ -38,9 +37,9 @@ const Cart = () => {
           <div className="bg-gray-200 p-10 h-70 flex flex-col justify-between mb-4 rounded-md">
             <div>
               <div className="font-medium text-xl">В корзине</div>
-              <div className="mb-5">{formatNumber(totalCount)} товаров</div>
+              <div className="mb-5">{getFormatNumber(totalCount)} товаров</div>
               <div className="font-medium text-2xl">
-                {formatNumber(totalPrice)} ₽
+                {getFormatNumber(totalPrice)} ₽
               </div>
             </div>
             <Button className="w-full" fz="normal">

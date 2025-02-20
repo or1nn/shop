@@ -1,11 +1,9 @@
-import { BrowserRouter } from 'react-router-dom';
-import AppRouter from './components/AppRouter';
-
+import { AppRouter, Providers } from '@components/shared';
 function App() {
   return (
-    <BrowserRouter>
+    <Providers>
       <AppRouter />
-    </BrowserRouter>
+    </Providers>
   );
 }
 
